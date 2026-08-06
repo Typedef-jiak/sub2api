@@ -231,6 +231,12 @@ func TestIsSensitiveProviderConfigField(t *testing.T) {
 		{"wxpay", "certSerial", false},
 		{"wxpay", "mchId", false},
 
+		// LTZF
+		{payment.TypeLTZF, "merchantKey", true},
+		{payment.TypeLTZF, "MerchantKey", true}, // case-insensitive
+		{payment.TypeLTZF, "mchId", false},
+		{payment.TypeLTZF, "apiBase", false},
+
 		// EasyPay
 		{"easypay", "pkey", true},
 		{"easypay", "pid", false},

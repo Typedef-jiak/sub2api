@@ -33,6 +33,7 @@ const (
 	VisibleMethodSourceEasyPayAlipay  = "easypay_alipay"
 	VisibleMethodSourceOfficialWechat = "official_wxpay"
 	VisibleMethodSourceEasyPayWechat  = "easypay_wxpay"
+	VisibleMethodSourceLTZFWechat     = "ltzf_wxpay"
 
 	wechatPaymentResumeTokenType = "wechat_payment_resume"
 
@@ -163,6 +164,8 @@ func NormalizeVisibleMethodSource(method, source string) string {
 			return VisibleMethodSourceOfficialWechat
 		case VisibleMethodSourceEasyPayWechat, payment.TypeEasyPay:
 			return VisibleMethodSourceEasyPayWechat
+		case VisibleMethodSourceLTZFWechat, payment.TypeLTZF:
+			return VisibleMethodSourceLTZFWechat
 		}
 	}
 	return ""
@@ -178,6 +181,8 @@ func VisibleMethodProviderKeyForSource(method, source string) (string, bool) {
 		return payment.TypeWxpay, NormalizeVisibleMethod(method) == payment.TypeWxpay
 	case VisibleMethodSourceEasyPayWechat:
 		return payment.TypeEasyPay, NormalizeVisibleMethod(method) == payment.TypeWxpay
+	case VisibleMethodSourceLTZFWechat:
+		return payment.TypeLTZF, NormalizeVisibleMethod(method) == payment.TypeWxpay
 	default:
 		return "", false
 	}

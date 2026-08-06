@@ -168,6 +168,19 @@ func validateProviderSnapshotMetadata(order *dbent.PaymentOrder, providerKey str
 		if actual := strings.TrimSpace(metadata["trade_state"]); actual != "" && !strings.EqualFold(actual, "SUCCESS") {
 			return fmt.Errorf("wxpay trade_state mismatch: expected SUCCESS, got %s", actual)
 		}
+	case payment.TypeLTZF:
+		if expected := strings.TrimSpace(snapshot.MerchantID); expected != "" {
+			actual := strings.TrimSpace(metadata["mchid"])
+			if actual == "" {
+				return fmt.Errorf("ltzf notification missing mch_id")
+			}
+			if !strings.EqualFold(expected, actual) {
+				return fmt.Errorf("ltzf mch_id mismatch: expected %s, got %s", expected, actual)
+			}
+		}
+		if actual := strings.TrimSpace(metadata["trade_state"]); actual != "" && !strings.EqualFold(actual, "SUCCESS") {
+			return fmt.Errorf("ltzf trade_state mismatch: expected SUCCESS, got %s", actual)
+		}
 	case payment.TypeAlipay:
 		if expected := strings.TrimSpace(snapshot.MerchantAppID); expected != "" {
 			actual := strings.TrimSpace(metadata["app_id"])

@@ -286,6 +286,12 @@ func buildPaymentOrderProviderSnapshot(sel *payment.InstanceSelection, req Creat
 		}
 		snapshot["currency"] = payment.DefaultPaymentCurrency
 	}
+	if providerKey == payment.TypeLTZF {
+		if merchantID := strings.TrimSpace(sel.Config["mchId"]); merchantID != "" {
+			snapshot["merchant_id"] = merchantID
+		}
+		snapshot["currency"] = payment.DefaultPaymentCurrency
+	}
 	if providerKey == payment.TypeAlipay {
 		if merchantAppID := strings.TrimSpace(sel.Config["appId"]); merchantAppID != "" {
 			snapshot["merchant_app_id"] = merchantAppID

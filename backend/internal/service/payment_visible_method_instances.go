@@ -48,6 +48,10 @@ func enabledVisibleMethodsForProvider(providerKey, supportedTypes string) []stri
 		for _, supportedType := range splitTypes(supportedTypes) {
 			addMethod(supportedType)
 		}
+	case payment.TypeLTZF:
+		if strings.TrimSpace(supportedTypes) == "" || payment.InstanceSupportsType(supportedTypes, payment.TypeWxpay) {
+			addMethod(payment.TypeWxpay)
+		}
 	}
 
 	methods := make([]string, 0, len(methodSet))

@@ -41,6 +41,13 @@ func TestWriteSuccessResponse(t *testing.T) {
 			wantJSONMessage: "成功",
 		},
 		{
+			name:            "ltzf returns uppercase plain text SUCCESS",
+			providerKey:     payment.TypeLTZF,
+			wantCode:        http.StatusOK,
+			wantContentType: "text/plain",
+			wantBody:        "SUCCESS",
+		},
+		{
 			name:            "stripe returns empty 200",
 			providerKey:     "stripe",
 			wantCode:        http.StatusOK,

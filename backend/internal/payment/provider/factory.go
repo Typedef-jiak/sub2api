@@ -15,6 +15,8 @@ func CreateProvider(providerKey string, instanceID string, config map[string]str
 		return NewAlipay(instanceID, config)
 	case payment.TypeWxpay:
 		return NewWxpay(instanceID, config)
+	case payment.TypeLTZF:
+		return NewLTZF(instanceID, config)
 	case payment.TypeStripe:
 		return NewStripe(instanceID, config)
 	case payment.TypeAirwallex:

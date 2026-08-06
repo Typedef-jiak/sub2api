@@ -55,6 +55,12 @@ func (h *PaymentWebhookHandler) WxpayNotify(c *gin.Context) {
 	h.handleNotify(c, payment.TypeWxpay)
 }
 
+// LTZFNotify handles 蓝兔支付 callbacks.
+// POST /api/v1/payment/webhook/ltzf
+func (h *PaymentWebhookHandler) LTZFNotify(c *gin.Context) {
+	h.handleNotify(c, payment.TypeLTZF)
+}
+
 // StripeWebhook handles Stripe webhook events.
 // POST /api/v1/payment/webhook/stripe
 func (h *PaymentWebhookHandler) StripeWebhook(c *gin.Context) {
@@ -148,7 +154,7 @@ func (h *PaymentWebhookHandler) handleNotify(c *gin.Context, providerKey string)
 // This allows looking up the correct provider instance before verification.
 func extractOutTradeNo(rawBody, providerKey string) string {
 	switch providerKey {
-	case payment.TypeEasyPay, payment.TypeAlipay:
+	case payment.TypeEasyPay, payment.TypeAlipay, payment.TypeLTZF:
 		values, err := url.ParseQuery(rawBody)
 		if err == nil {
 			return values.Get("out_trade_no")
@@ -202,12 +208,14 @@ const (
 )
 
 // writeSuccessResponse 返回各支付服务商要求的成功响应。
-// 微信支付需要 JSON {"code":"SUCCESS","message":"成功"}；
+// 微信支付需要 JSON {"code":"SUCCESS","message":"成功"}；蓝兔支付需要大写纯文本 "SUCCESS"；
 // Stripe 和空中云汇接受空 200，其它服务商接受纯文本 "success"。
 func writeSuccessResponse(c *gin.Context, providerKey string) {
 	switch providerKey {
 	case payment.TypeWxpay:
 		c.JSON(http.StatusOK, wxpaySuccessResponse{Code: wxpaySuccessCode, Message: wxpaySuccessMessage})
+	case payment.TypeLTZF:
+		c.String(http.StatusOK, "SUCCESS")
 	case payment.TypeStripe, payment.TypeAirwallex:
 		c.String(http.StatusOK, "")
 	default:

@@ -11811,13 +11811,16 @@ const providerKeyOptions = computed(() => [
   { value: "easypay", label: t("admin.settings.payment.providerEasypay") },
   { value: "alipay", label: t("admin.settings.payment.providerAlipay") },
   { value: "wxpay", label: t("admin.settings.payment.providerWxpay") },
+  { value: "ltzf", label: t("admin.settings.payment.providerLTZF") },
   { value: "stripe", label: t("admin.settings.payment.providerStripe") },
   { value: "airwallex", label: t("admin.settings.payment.providerAirwallex") },
 ]);
 
 const enabledProviderKeyOptions = computed(() => {
   const enabled = form.payment_enabled_types;
-  return providerKeyOptions.value.filter((opt) => enabled.includes(opt.value));
+  return providerKeyOptions.value.filter((opt) =>
+    opt.value === "ltzf" ? enabled.includes("wxpay") : enabled.includes(opt.value),
+  );
 });
 
 const loadBalanceOptions = computed(() => [
@@ -11896,6 +11899,8 @@ function getProviderVisibleMethods(
     }
   } else if (provider.provider_key === "easypay") {
     supportedTypes.forEach(addMethod);
+  } else if (provider.provider_key === "ltzf") {
+    methods.add("wxpay");
   }
 
   return Array.from(methods);
